@@ -1,22 +1,29 @@
 const pool = require('../config/db');
 
 // GET all tasks
-const getTasks = async (req, res) => {
+const getTasks = async (req, res, next) => {
   try {
     const result = await pool.query('SELECT * FROM tasks ORDER BY id ASC');
-    res.json({ status: 'success', data: result.rows });
+
+    res.status(200).json({
+      status: 'success',
+      data: result.rows
+    });
+
   } catch (err) {
-    res.status(500).json({ status: 'error', message: err.message });
+    next(err);
   }
 };
 
 // CREATE task
-const createTask = async (req, res) => {
+const createTask = async (req, res, next) => {
   try {
     const { title } = req.body;
 
     if (!title) {
-      return res.status(400).json({ status: 'error', message: 'Title is required' });
+      const error = new Error('Title is required');
+      error.statusCode = 400;
+      return next(error);
     }
 
     const result = await pool.query(
@@ -24,35 +31,49 @@ const createTask = async (req, res) => {
       [title]
     );
 
-    res.status(201).json({ status: 'success', data: result.rows[0] });
+    res.status(201).json({
+      status: 'success',
+      data: result.rows[0]
+    });
+
   } catch (err) {
-    res.status(500).json({ status: 'error', message: err.message });
+    next(err);
   }
 };
 
 // UPDATE task
-const updateTask = async (req, res) => {
+const updateTask = async (req, res, next) => {
   try {
     const taskId = parseInt(req.params.id);
     const { title, completed } = req.body;
 
     const result = await pool.query(
-      'UPDATE tasks SET title = COALESCE($1, title), completed = COALESCE($2, completed) WHERE id = $3 RETURNING *',
+      `UPDATE tasks 
+       SET title = COALESCE($1, title), 
+           completed = COALESCE($2, completed) 
+       WHERE id = $3 
+       RETURNING *`,
       [title, completed, taskId]
     );
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ status: 'error', message: 'Task not found' });
+      const error = new Error('Task not found');
+      error.statusCode = 404;
+      return next(error);
     }
 
-    res.json({ status: 'success', data: result.rows[0] });
+    res.status(200).json({
+      status: 'success',
+      data: result.rows[0]
+    });
+
   } catch (err) {
-    res.status(500).json({ status: 'error', message: err.message });
+    next(err);
   }
 };
 
 // DELETE task
-const deleteTask = async (req, res) => {
+const deleteTask = async (req, res, next) => {
   try {
     const taskId = parseInt(req.params.id);
 
@@ -62,12 +83,18 @@ const deleteTask = async (req, res) => {
     );
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ status: 'error', message: 'Task not found' });
+      const error = new Error('Task not found');
+      error.statusCode = 404;
+      return next(error);
     }
 
-    res.json({ status: 'success', data: result.rows[0] });
+    res.status(200).json({
+      status: 'success',
+      data: result.rows[0]
+    });
+
   } catch (err) {
-    res.status(500).json({ status: 'error', message: err.message });
+    next(err);
   }
 };
 

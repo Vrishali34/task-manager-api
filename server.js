@@ -11,6 +11,9 @@ const PORT = process.env.PORT || 3000;
 // Import task routes
 const taskRoutes = require('./routes/taskRoutes');
 
+// Import global error handler
+const errorHandler = require('./middleware/errorHandler');
+
 // Middleware to parse JSON
 app.use(express.json());
 
@@ -24,6 +27,9 @@ app.get('/', (req, res) => {
 
 // Mount task routes
 app.use('/tasks', taskRoutes);
+
+// Global error middleware (must be after routes)
+app.use(errorHandler);
 
 // Start server
 app.listen(PORT, () => {
