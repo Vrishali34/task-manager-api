@@ -1,5 +1,26 @@
 ## Project Structure
 
+```
+task-manager-api
+│
+├── controllers
+│   └── taskController.js
+│
+├── middleware
+│   └── errorHandler.js
+│
+├── routes
+│   └── taskRoutes.js
+│
+├── db
+│   └── db.js
+│
+├── server.js
+├── package.json
+├── .env
+└── README.md
+```## Project Structure
+
 task-manager-api
 │
 ├── controllers
