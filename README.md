@@ -1,4 +1,23 @@
-# Task Manager API
+## Project Structure
+
+task-manager-api
+│
+├── controllers
+│   └── taskController.js
+│
+├── middleware
+│   └── errorHandler.js
+│
+├── routes
+│   └── taskRoutes.js
+│
+├── db
+│   └── db.js
+│
+├── server.js
+├── package.json
+├── .env
+└── README.md# Task Manager API
 
 A simple RESTful API built with Node.js, Express, and PostgreSQL to manage tasks.
 
