@@ -258,11 +258,20 @@ http://localhost:5000
 
 ---
 
+## API Documentation
+
+Interactive API documentation is available using Swagger.
+
+After starting the server, open:
+
+http://localhost:5000/api-docs
+
+---
+
 # Future Improvements
 
 * Add request validation
 * Implement pagination for tasks
-* Add API documentation using Swagger
 * Add automated tests using Jest
 * Containerize the application with Docker
 * Add logging and monitoring
