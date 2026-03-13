@@ -1,17 +1,65 @@
 const pool = require('../config/db');
 
-// GET all tasks for logged-in user
+// GET all tasks for logged-in user with pagination + metadata + filtering + sorting
 const getTasks = async (req, res, next) => {
   try {
     const userId = req.user.userId;
 
+    // Query parameters
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const completed = req.query.completed;
+
+    // Sorting parameters
+    const sort = req.query.sort || 'id';
+    const order = req.query.order === 'desc' ? 'DESC' : 'ASC';
+
+    const offset = (page - 1) * limit;
+
+    // Allowed fields for sorting (security)
+    const allowedSortFields = ['id', 'title', 'completed'];
+    const sortField = allowedSortFields.includes(sort) ? sort : 'id';
+
+    // Build filtering condition
+    let filterQuery = 'WHERE user_id = $1';
+    let queryParams = [userId];
+
+    if (completed !== undefined) {
+      filterQuery += ' AND completed = $2';
+      queryParams.push(completed === 'true');
+    }
+
+    // 1️⃣ Get total number of tasks (with filter applied)
+    const countQuery = `SELECT COUNT(*) FROM tasks ${filterQuery}`;
+    const countResult = await pool.query(countQuery, queryParams);
+
+    const totalTasks = parseInt(countResult.rows[0].count);
+    const totalPages = Math.ceil(totalTasks / limit);
+
+    // 2️⃣ Add pagination parameters
+    queryParams.push(limit);
+    queryParams.push(offset);
+
+    // 3️⃣ Fetch tasks with sorting
     const result = await pool.query(
-      'SELECT * FROM tasks WHERE user_id = $1 ORDER BY id ASC',
-      [userId]
+      `SELECT * FROM tasks
+       ${filterQuery}
+       ORDER BY ${sortField} ${order}
+       LIMIT $${queryParams.length - 1}
+       OFFSET $${queryParams.length}`,
+      queryParams
     );
 
     res.status(200).json({
       status: 'success',
+      page,
+      limit,
+      totalTasks,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1,
+      sort: sortField,
+      order: order.toLowerCase(),
       data: result.rows
     });
 
