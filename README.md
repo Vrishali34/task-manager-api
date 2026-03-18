@@ -1,304 +1,212 @@
 # Task Manager API
 
-A secure RESTful API built with Node.js, Express, and PostgreSQL for managing tasks.  
-The API supports user authentication and allows users to create, retrieve, update, and delete their own tasks.
-
-The project demonstrates a clean backend architecture using controllers, routes, middleware, and database modules.
+A secure, production-style RESTful API for managing personal tasks — built with Node.js, Express.js, and PostgreSQL.
 
 ---
 
-## Features
+## 🚀 Features
 
-- User registration
-- User login with JWT authentication
-- Protected task routes
-- Create tasks
-- Retrieve user tasks
-- Update tasks
-- Delete tasks
-- Pagination for task retrieval
-- Filtering tasks by completion status
-- Sorting tasks by fields (id, title, completed)
-- PostgreSQL database integration
-- Swagger API documentation
-- Centralized error handling middleware
-- Environment variable configuration using dotenv
+- **Authentication** — Register and login with email and password
+- **JWT Authorization** — Protected routes using JSON Web Tokens
+- **Task Management** — Full CRUD operations on tasks
+- **Validation** — Request validation using Joi schemas on all endpoints
+- **Pagination** — Page through tasks with page and limit controls
+- **Filtering** — Filter tasks by completion status
+- **Sorting** — Sort tasks by id, title, or completed status
+- **Swagger Docs** — Interactive API documentation at `/api-docs`
+- **Error Handling** — Centralized error handling with consistent responses
 
 ---
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-- Node.js
-- Express.js
-- PostgreSQL
-- JSON Web Token (JWT)
-- bcrypt
-- dotenv
+| Layer | Technology |
+|---|---|
+| Runtime | Node.js v24 |
+| Framework | Express.js v5 |
+| Database | PostgreSQL |
+| Authentication | JWT + bcrypt |
+| Validation | Joi |
+| Documentation | Swagger (OpenAPI 3.0) |
+| Configuration | dotenv |
 
 ---
 
-## Project Structure
-
+## 📁 Project Structure
 ```
-
 task-manager-api
 │
 ├── config
-│   └── db.js
+│   └── db.js               # PostgreSQL connection pool
 │
 ├── controllers
-│   ├── authController.js
-│   └── taskController.js
+│   ├── authController.js   # Register and login logic
+│   └── taskController.js   # CRUD task logic
 │
 ├── middleware
-│   ├── authMiddleware.js
-│   └── errorHandler.js
+│   ├── authMiddleware.js    # JWT verification
+│   ├── validateMiddleware.js # Reusable Joi validation
+│   └── errorHandler.js     # Centralized error handler
 │
 ├── routes
-│   ├── authRoutes.js
-│   └── taskRoutes.js
+│   ├── authRoutes.js        # Auth endpoints + Swagger docs
+│   └── taskRoutes.js        # Task endpoints + Swagger docs
 │
-├── server.js
-├── package.json
-├── .env
-└── README.md
-
-````
-
----
-
-## Architecture
-
-The application follows a modular backend structure:
-
-- **Routes** define the API endpoints
-- **Controllers** contain the request handling logic
-- **Database module** manages PostgreSQL connections and queries
-- **Middleware** provides authentication and centralized error handling
-- **Server** initializes the Express application and registers routes
-
-This structure improves maintainability and separation of concerns.
-
----
-
-# API Endpoints
-
-## Authentication
-
-### Register User
-
-POST /auth/register
-
-Example Request
-
-```json
-{
-  "email": "test@example.com",
-  "password": "123456"
-}
-````
-
-Example Response
-
-```json
-{
-  "status": "success",
-  "message": "User registered successfully"
-}
+├── validators
+│   ├── authValidator.js     # Register and login schemas
+│   └── taskValidator.js     # Create and update task schemas
+│
+├── docs
+│   └── swagger.js           # Swagger configuration
+│
+├── server.js                # App entry point
+├── .env                     # Environment variables (not committed)
+└── package.json
 ```
 
 ---
 
-### Login User
+## ⚙️ Getting Started
 
-POST /auth/login
+### Prerequisites
+- Node.js v20 or higher
+- PostgreSQL
 
-Example Request
-
-```json
-{
-  "email": "test@example.com",
-  "password": "123456"
-}
-```
-
-Example Response
-
-```json
-{
-  "status": "success",
-  "token": "JWT_TOKEN"
-}
-```
-
----
-
-# Protected Routes
-
-All task routes require a valid JWT token.
-
-Example header:
-
-```
-Authorization: Bearer <token>
-```
-
----
-
-## Get All Tasks
-
-Get All Tasks (with Pagination, Filtering, and Sorting)
-
-GET /tasks
-
-Query Parameters
-
-page       Page number (default: 1)
-limit      Number of tasks per page (default: 10)
-completed  Filter tasks by completion status (true or false)
-sort       Field to sort by (id, title, completed)
-order      Sort order (asc or desc)
-
-Example Request
-
-curl "http://localhost:5000/tasks?page=1&limit=2&completed=false&sort=id&order=desc" \
--H "Authorization: Bearer YOUR_TOKEN"
-
-Example Response
-
-{
-  "status": "success",
-  "page": 1,
-  "limit": 2,
-  "totalTasks": 5,
-  "totalPages": 3,
-  "hasNextPage": true,
-  "hasPreviousPage": false,
-  "sort": "id",
-  "order": "desc",
-  "data": [
-    {
-      "id": 1,
-      "title": "Learn Express",
-      "completed": false,
-      "user_id": 1
-    }
-  ]
-}
-
----
-
-## Create Task
-
-POST /tasks
-
-Example Request
-
+### 1. Clone the repository
 ```bash
-curl -X POST http://localhost:5000/tasks \
--H "Authorization: Bearer YOUR_TOKEN" \
--H "Content-Type: application/json" \
--d '{"title":"Secure API task"}'
-```
-
----
-
-## Update Task
-
-PUT /tasks/:id
-
-Example Request
-
-```bash
-curl -X PUT http://localhost:5000/tasks/1 \
--H "Authorization: Bearer YOUR_TOKEN" \
--H "Content-Type: application/json" \
--d '{"completed": true}'
-```
-
----
-
-## Delete Task
-
-DELETE /tasks/:id
-
-Example Request
-
-```bash
-curl -X DELETE http://localhost:5000/tasks/1 \
--H "Authorization: Bearer YOUR_TOKEN"
-```
-
----
-
-# Setup and Installation
-
-## 1 Clone the repository
-
-```bash
-git clone <repository-url>
-```
-
-## 2 Navigate to the project folder
-
-```bash
+git clone https://github.com/Vrishali34/task-manager-api.git
 cd task-manager-api
 ```
 
-## 3 Install dependencies
-
+### 2. Install dependencies
 ```bash
 npm install
 ```
 
-## 4 Create a `.env` file
+### 3. Set up environment variables
 
+Create a `.env` file in the root directory:
 ```
 PORT=5000
-DB_USER=your_user
-DB_PASSWORD=your_password
-DB_NAME=your_database
+DB_USER=your_db_user
+DB_HOST=localhost
+DB_NAME=taskdb
+DB_PASSWORD=your_db_password
 DB_PORT=5432
-JWT_SECRET=your_secret_key
+JWT_SECRET=your_jwt_secret_key
 ```
 
-## 5 Start the server
+### 4. Set up the database
 
+Run these SQL commands in your PostgreSQL client:
+```sql
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR UNIQUE NOT NULL,
+  password VARCHAR NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE tasks (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR NOT NULL,
+  completed BOOLEAN DEFAULT FALSE,
+  user_id INTEGER REFERENCES users(id),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### 5. Start the server
 ```bash
 node server.js
 ```
 
-The API will run on:
-
-```
-http://localhost:5000
-```
+Server runs at `http://localhost:5000`
 
 ---
 
-## API Documentation
+## 📖 API Documentation
 
-Interactive API documentation is available using Swagger.
-
-After starting the server, open:
-
+Interactive Swagger documentation available at:
+```
 http://localhost:5000/api-docs
+```
 
 ---
 
-# Future Improvements
+## 🔗 API Endpoints
 
-* Add request validation using Joi
-* Add automated tests using Jest
-* Implement cursor-based pagination for large datasets
-* Containerize the application with Docker
-* Add logging and monitoring
+### Authentication
+
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| POST | /auth/register | Register a new user | No |
+| POST | /auth/login | Login and get JWT token | No |
+
+### Tasks
+
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| GET | /tasks | Get all tasks | Yes |
+| POST | /tasks | Create a new task | Yes |
+| PUT | /tasks/:id | Update a task | Yes |
+| DELETE | /tasks/:id | Delete a task | Yes |
+
+### GET /tasks Query Parameters
+
+| Parameter | Type | Description | Example |
+|---|---|---|---|
+| page | integer | Page number | 1 |
+| limit | integer | Tasks per page | 10 |
+| completed | boolean | Filter by status | true |
+| sort | string | Sort field | title |
+| order | string | Sort direction | desc |
+
 ---
 
-# Author
+## 🔐 Authentication Flow
+```
+1. Register → POST /auth/register
+2. Login    → POST /auth/login → receive JWT token
+3. Use token in Authorization header for all task requests
+   Authorization: Bearer <your_token>
+```
 
-GitHub:
-[https://github.com/Vrishali34](https://github.com/Vrishali34)
+---
 
-````
+## ✅ Validation Rules
 
+### Register
+- Email must be a valid email address
+- Password must be at least 6 characters and max 128 characters
+
+### Login
+- Email must be a valid email address
+- Password must not be empty
+
+### Create Task
+- Title is required, min 3 characters, max 255 characters
+
+### Update Task
+- Title is optional, min 3 characters, max 255 characters
+- Completed is optional, must be boolean
+
+---
+
+## 🗺️ Roadmap
+
+- [x] JWT Authentication
+- [x] CRUD Task Operations
+- [x] Pagination, Filtering, Sorting
+- [x] Joi Request Validation
+- [x] Swagger Documentation
+- [ ] Automated Testing with Jest
+- [ ] Cursor-based Pagination
+- [ ] Docker Support
+- [ ] Winston Logging
+
+---
+
+## 👩‍💻 Author
+
+Vrishali — [GitHub](https://github.com/Vrishali34)
