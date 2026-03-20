@@ -15,6 +15,7 @@ A secure, production-style RESTful API for managing personal tasks — built wit
 - **Sorting** — Sort tasks by id, title, or completed status
 - **Swagger Docs** — Interactive API documentation at `/api-docs`
 - **Error Handling** — Centralized error handling with consistent responses
+- **Automated Testing** — 19 tests covering auth and task endpoints using Jest and Supertest
 
 ---
 
@@ -28,6 +29,7 @@ A secure, production-style RESTful API for managing personal tasks — built wit
 | Authentication | JWT + bcrypt |
 | Validation | Joi |
 | Documentation | Swagger (OpenAPI 3.0) |
+| Testing | Jest + Supertest |
 | Configuration | dotenv |
 
 ---
@@ -37,30 +39,35 @@ A secure, production-style RESTful API for managing personal tasks — built wit
 task-manager-api
 │
 ├── config
-│   └── db.js               # PostgreSQL connection pool
+│   └── db.js                 # PostgreSQL connection pool
 │
 ├── controllers
-│   ├── authController.js   # Register and login logic
-│   └── taskController.js   # CRUD task logic
+│   ├── authController.js     # Register and login logic
+│   └── taskController.js     # CRUD task logic
 │
 ├── middleware
-│   ├── authMiddleware.js    # JWT verification
+│   ├── authMiddleware.js     # JWT verification
 │   ├── validateMiddleware.js # Reusable Joi validation
-│   └── errorHandler.js     # Centralized error handler
+│   └── errorHandler.js      # Centralized error handler
 │
 ├── routes
-│   ├── authRoutes.js        # Auth endpoints + Swagger docs
-│   └── taskRoutes.js        # Task endpoints + Swagger docs
+│   ├── authRoutes.js         # Auth endpoints + Swagger docs
+│   └── taskRoutes.js         # Task endpoints + Swagger docs
 │
 ├── validators
-│   ├── authValidator.js     # Register and login schemas
-│   └── taskValidator.js     # Create and update task schemas
+│   ├── authValidator.js      # Register and login schemas
+│   └── taskValidator.js      # Create and update task schemas
 │
 ├── docs
-│   └── swagger.js           # Swagger configuration
+│   └── swagger.js            # Swagger configuration
 │
-├── server.js                # App entry point
-├── .env                     # Environment variables (not committed)
+├── tests
+│   ├── auth.test.js          # Auth endpoint tests
+│   └── task.test.js          # Task endpoint tests
+│
+├── app.js                    # Express app configuration
+├── server.js                 # Server entry point
+├── .env                      # Environment variables (not committed)
 └── package.json
 ```
 
@@ -118,10 +125,45 @@ CREATE TABLE tasks (
 
 ### 5. Start the server
 ```bash
-node server.js
+npm start
 ```
 
 Server runs at `http://localhost:5000`
+
+---
+
+## 🧪 Running Tests
+
+The test suite uses Jest and Supertest with a separate isolated test database.
+
+### Set up test database
+```sql
+CREATE DATABASE taskdb_test;
+```
+
+Create tables in test database (same schema as above but in `taskdb_test`).
+
+Create a `.env.test` file:
+```
+PORT=5001
+DB_USER=your_db_user
+DB_HOST=localhost
+DB_NAME=taskdb_test
+DB_PASSWORD=your_db_password
+DB_PORT=5432
+JWT_SECRET=test_jwt_secret_key
+```
+
+### Run tests
+```bash
+npm test
+```
+
+Expected output:
+```
+Tests:       19 passed, 19 total
+Test Suites: 2 passed, 2 total
+```
 
 ---
 
@@ -200,7 +242,7 @@ http://localhost:5000/api-docs
 - [x] Pagination, Filtering, Sorting
 - [x] Joi Request Validation
 - [x] Swagger Documentation
-- [ ] Automated Testing with Jest
+- [x] Automated Testing with Jest
 - [ ] Cursor-based Pagination
 - [ ] Docker Support
 - [ ] Winston Logging
