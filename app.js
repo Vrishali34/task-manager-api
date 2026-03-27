@@ -16,14 +16,14 @@ const swaggerSpec = require('./docs/swagger');
 const taskRoutes = require('./routes/taskRoutes');
 const authRoutes = require('./routes/authRoutes');
 
-// Import global error handler
+// Import middleware
 const errorHandler = require('./middleware/errorHandler');
+const morganMiddleware = require('./middleware/morganMiddleware');
+const logger = require('./utils/logger');
 
 // ─── SECURITY MIDDLEWARE ────────────────────────────────────
 
 // Helmet — sets secure HTTP response headers
-// Protects against clickjacking, XSS, MIME sniffing, and more
-// Also removes X-Powered-By header so Express is not advertised
 // contentSecurityPolicy disabled to allow Swagger UI to load correctly
 app.use(helmet({
   contentSecurityPolicy: false
@@ -32,22 +32,22 @@ app.use(helmet({
 // General rate limiter — applied to all routes
 // Allows 100 requests per 15 minutes per IP
 const generalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100,                  // max requests per window
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   message: {
     status: 'error',
     message: 'Too many requests, please try again after 15 minutes'
   },
-  standardHeaders: true,  // sends RateLimit headers in response
-  legacyHeaders: false     // disables old X-RateLimit headers
+  standardHeaders: true,
+  legacyHeaders: false
 });
 
 // Auth rate limiter — stricter, applied only to login and register
 // Allows 10 requests per 15 minutes per IP
 // Prevents brute force attacks on auth endpoints
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10,                   // max requests per window
+  windowMs: 15 * 60 * 1000,
+  max: 10,
   message: {
     status: 'error',
     message: 'Too many attempts, please try again after 15 minutes'
@@ -55,6 +55,11 @@ const authLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false
 });
+
+// ─── LOGGING MIDDLEWARE ─────────────────────────────────────
+
+// Morgan — logs every HTTP request through Winston
+app.use(morganMiddleware);
 
 // ─── GENERAL MIDDLEWARE ─────────────────────────────────────
 
@@ -85,5 +90,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Global error middleware (must be after routes)
 app.use(errorHandler);
+
+// Log server startup
+logger.info('App configured successfully');
 
 module.exports = app;

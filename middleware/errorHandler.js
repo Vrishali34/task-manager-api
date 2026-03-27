@@ -1,14 +1,19 @@
-const errorHandler = (err, req, res, next) => {
+// middleware/errorHandler.js
+const logger = require('../utils/logger');
 
-  console.error(err);
+const errorHandler = (err, req, res, next) => {
+  // Log error with full stack trace using Winston
+  // Replaces console.error with structured logging
+  logger.error(`${err.message} — ${req.method} ${req.originalUrl}`, {
+    stack: err.stack
+  });
 
   const statusCode = err.statusCode || 500;
 
   res.status(statusCode).json({
-    status: "error",
-    message: err.message || "Internal Server Error"
+    status: 'error',
+    message: err.message || 'Internal Server Error'
   });
-
 };
 
 module.exports = errorHandler;
