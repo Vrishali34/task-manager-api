@@ -15,6 +15,7 @@ A secure, production-style RESTful API for managing personal tasks — built wit
 - **Sorting** — Sort tasks by id, title, or completed status
 - **Rate Limiting** — Brute force protection on all endpoints
 - **Security Headers** — Helmet.js securing HTTP response headers
+- **Logging** — Structured logging with Winston and Morgan
 - **Swagger Docs** — Interactive API documentation at `/api-docs`
 - **Error Handling** — Centralized error handling with consistent responses
 - **Automated Testing** — 19 tests covering auth and task endpoints using Jest and Supertest
@@ -32,6 +33,7 @@ A secure, production-style RESTful API for managing personal tasks — built wit
 | Authentication | JWT + bcrypt |
 | Validation | Joi |
 | Security | Helmet.js + express-rate-limit |
+| Logging | Winston + Morgan |
 | Documentation | Swagger (OpenAPI 3.0) |
 | Testing | Jest + Supertest |
 | Containerization | Docker + docker-compose |
@@ -53,6 +55,7 @@ task-manager-api
 ├── middleware
 │   ├── authMiddleware.js     # JWT verification
 │   ├── validateMiddleware.js # Reusable Joi validation
+│   ├── morganMiddleware.js   # HTTP request logging
 │   └── errorHandler.js      # Centralized error handler
 │
 ├── routes
@@ -63,12 +66,19 @@ task-manager-api
 │   ├── authValidator.js      # Register and login schemas
 │   └── taskValidator.js      # Create and update task schemas
 │
+├── utils
+│   └── logger.js             # Winston logger configuration
+│
 ├── docs
 │   └── swagger.js            # Swagger configuration
 │
 ├── tests
 │   ├── auth.test.js          # Auth endpoint tests
 │   └── task.test.js          # Task endpoint tests
+│
+├── logs
+│   ├── combined.log          # All logs (gitignored)
+│   └── error.log             # Error logs only (gitignored)
 │
 ├── app.js                    # Express app configuration
 ├── server.js                 # Server entry point
@@ -230,6 +240,33 @@ http://localhost:5000/api-docs
 
 ---
 
+## 📋 Logging
+
+Winston and Morgan provide structured logging across the application.
+
+### Log Levels
+```
+error  — application errors with stack traces
+warn   — suspicious activity
+info   — server startup and key events
+http   — every HTTP request with method, URL, status, response time
+```
+
+### Log Files
+```
+logs/combined.log  — all log levels
+logs/error.log     — errors only
+```
+
+### Example Log Output
+```
+2026-03-27 12:42:51 [INFO]: App configured successfully
+2026-03-27 12:42:51 [HTTP]: GET / HTTP/1.1 200
+2026-03-27 12:42:51 [ERROR]: Task not found — PUT /tasks/99999
+```
+
+---
+
 ## ✅ Validation Rules
 
 ### Register
@@ -273,7 +310,7 @@ docker compose down -v
 - [x] Automated Testing with Jest
 - [x] Rate Limiting + Security Headers
 - [x] Docker Support
-- [ ] Winston Logging
+- [x] Winston Logging
 
 ---
 
