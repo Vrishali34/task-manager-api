@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a14;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    padding: 40px;
+  }
+  .window {
+    background: #0d0d1a;
+    border-radius: 14px;
+    width: 780px;
+    overflow: hidden;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+    border: 1px solid #1a1a2e;
+  }
+  .titlebar {
+    background: #12122a;
+    padding: 13px 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #1a1a2e;
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot.red { background: #ff5f57; }
+  .dot.yellow { background: #febc2e; }
+  .dot.green { background: #28c840; }
+  .title { flex: 1; text-align: center; color: #444466; font-size: 12px; }
+  .body { padding: 24px; }
+
+  .label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #333355;
+    margin-bottom: 10px;
+  }
+
+  .suite {
+    background: #0a0a18;
+    border-radius: 8px;
+    padding: 14px 16px;
+    border: 1px solid #1a1a2e;
+    margin-bottom: 12px;
+  }
+
+  .suite-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #111122;
+  }
+
+  .pass-badge {
+    background: #28c840;
+    color: #000;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+
+  .suite-name { color: #aabbcc; font-size: 12px; font-weight: 700; }
+
+  .group-name {
+    font-size: 11px;
+    color: #445566;
+    margin: 8px 0 4px 0;
+  }
+
+  .test-line {
+    font-size: 11px;
+    color: #336644;
+    line-height: 1.9;
+    padding-left: 12px;
+  }
+
+  .test-line::before {
+    content: '✓ ';
+    color: #28c840;
+  }
+
+  .divider { border: none; border-top: 1px solid #111122; margin: 14px 0; }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .summary-card {
+    background: #0a0a18;
+    border-radius: 8px;
+    padding: 12px 14px;
+    border: 1px solid #1a1a2e;
+    text-align: center;
+  }
+
+  .summary-card .num {
+    font-size: 20px;
+    font-weight: 700;
+    color: #28c840;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .summary-card .lbl {
+    font-size: 9px;
+    color: #445566;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .final-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #0a1a0a;
+    border: 1px solid #1a3a1a;
+    border-radius: 8px;
+    padding: 14px 18px;
+  }
+
+  .check { color: #28c840; font-size: 18px; }
+  .final-text { flex: 1; }
+  .final-title { font-size: 13px; font-weight: 700; color: #aabbcc; margin-bottom: 2px; }
+  .final-sub { font-size: 10px; color: #445566; }
+  .final-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 4px;
+    background: #0a1a0a;
+    color: #28c840;
+    border: 1px solid #1a3a1a;
+  }
+
+  .footer {
+    margin-top: 16px;
+    text-align: center;
+    color: #222233;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <div class="dot red"></div>
+    <div class="dot yellow"></div>
+    <div class="dot green"></div>
+    <div class="title">taskion — npm test</div>
+  </div>
+  <div class="body">
+
+    <div class="label">Test Suite 1 — tasks</div>
+    <div class="suite">
+      <div class="suite-header">
+        <span class="pass-badge">PASS</span>
+        <span class="suite-name">tests/task.test.js</span>
+      </div>
+      <div class="group-name">POST /tasks</div>
+      <div class="test-line">should create a task successfully</div>
+      <div class="test-line">should not create task without token</div>
+      <div class="test-line">should not create task with short title</div>
+      <div class="test-line">should not create task with empty title</div>
+      <div class="group-name">GET /tasks</div>
+      <div class="test-line">should get all tasks for logged in user</div>
+      <div class="test-line">should not get tasks without token</div>
+      <div class="group-name">PUT /tasks/:id</div>
+      <div class="test-line">should update a task successfully</div>
+      <div class="test-line">should return 404 for non existent task</div>
+      <div class="group-name">DELETE /tasks/:id</div>
+      <div class="test-line">should delete a task successfully</div>
+      <div class="test-line">should return 404 for non existent task</div>
+    </div>
+
+    <div class="label">Test Suite 2 — auth</div>
+    <div class="suite">
+      <div class="suite-header">
+        <span class="pass-badge">PASS</span>
+        <span class="suite-name">tests/auth.test.js</span>
+      </div>
+      <div class="group-name">POST /auth/register</div>
+      <div class="test-line">should register a new user successfully</div>
+      <div class="test-line">should not register with duplicate email</div>
+      <div class="test-line">should not register with invalid email</div>
+      <div class="test-line">should not register with short password</div>
+      <div class="test-line">should not register with empty body</div>
+      <div class="group-name">POST /auth/login</div>
+      <div class="test-line">should login successfully and return a token</div>
+      <div class="test-line">should not login with wrong password</div>
+      <div class="test-line">should not login with unregistered email</div>
+      <div class="test-line">should not login with missing fields</div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="summary-grid">
+      <div class="summary-card">
+        <span class="num">2</span>
+        <span class="lbl">Test Suites</span>
+      </div>
+      <div class="summary-card">
+        <span class="num">19</span>
+        <span class="lbl">Tests</span>
+      </div>
+      <div class="summary-card">
+        <span class="num">0</span>
+        <span class="lbl">Snapshots</span>
+      </div>
+      <div class="summary-card">
+        <span class="num">0.7s</span>
+        <span class="lbl">Time</span>
+      </div>
+    </div>
+
+    <div class="final-row">
+      <div class="check">✓</div>
+      <div class="final-text">
+        <div class="final-title">All tests passing</div>
+        <div class="final-sub">Jest + Supertest · isolated test database · auth and task endpoints covered</div>
+      </div>
+      <div class="final-badge">19 / 19</div>
+    </div>
+
+    <div class="footer">Taskion · npm test · Jest + Supertest</div>
+
+  </div>
+</div>
+</body>
+</html>

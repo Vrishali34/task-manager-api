@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a14;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    padding: 40px;
+  }
+  .window {
+    background: #0d0d1a;
+    border-radius: 14px;
+    width: 780px;
+    overflow: hidden;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+    border: 1px solid #1a1a2e;
+  }
+  .titlebar {
+    background: #12122a;
+    padding: 13px 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #1a1a2e;
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot.red { background: #ff5f57; }
+  .dot.yellow { background: #febc2e; }
+  .dot.green { background: #28c840; }
+  .title { flex: 1; text-align: center; color: #444466; font-size: 12px; }
+  .body { padding: 28px; }
+
+  .label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #333355;
+    margin-bottom: 10px;
+  }
+
+  .cmd-block {
+    background: #0a0a18;
+    border-radius: 8px;
+    padding: 16px 18px;
+    border: 1px solid #1a1a2e;
+    margin-bottom: 16px;
+  }
+
+  .cmd-line {
+    font-size: 12px;
+    line-height: 2;
+    color: #445566;
+  }
+
+  .cmd-line span.prompt { color: #333355; }
+  .cmd-line span.cmd { color: #5566aa; }
+  .cmd-line span.url { color: #4488cc; }
+  .cmd-line span.flag { color: #336655; }
+  .cmd-line span.data { color: #556677; }
+
+  .divider { border: none; border-top: 1px solid #111122; margin: 16px 0; }
+
+  .response-block {
+    background: #0a1a0a;
+    border-radius: 8px;
+    padding: 16px 18px;
+    border: 1px solid #1a3a1a;
+    margin-bottom: 16px;
+  }
+
+  .response-line {
+    font-size: 12px;
+    line-height: 1.8;
+  }
+
+  .key { color: #446644; }
+  .val-str { color: #88bb88; }
+  .val-num { color: #88aacc; }
+  .bracket { color: #334433; }
+  .status-success { color: #28c840; font-weight: 700; }
+
+  .result-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #0a1a0a;
+    border: 1px solid #1a3a1a;
+    border-radius: 8px;
+    padding: 14px 18px;
+  }
+
+  .check { color: #28c840; font-size: 18px; }
+  .result-text { flex: 1; }
+  .result-title { font-size: 13px; font-weight: 700; color: #aabbcc; margin-bottom: 2px; }
+  .result-sub { font-size: 10px; color: #445566; }
+
+  .live-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: #0a1a0a;
+    color: #28c840;
+    border: 1px solid #1a3a1a;
+  }
+
+  .footer {
+    margin-top: 16px;
+    text-align: center;
+    color: #222233;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <div class="dot red"></div>
+    <div class="dot yellow"></div>
+    <div class="dot green"></div>
+    <div class="title">taskion — live API test</div>
+  </div>
+  <div class="body">
+
+    <div class="label">Request — POST /auth/register (production)</div>
+    <div class="cmd-block">
+      <div class="cmd-line"><span class="prompt">$</span> <span class="cmd">curl</span> -X POST <span class="url">https://taskion.onrender.com/auth/register</span> \</div>
+      <div class="cmd-line">&nbsp;&nbsp;<span class="flag">-H</span> <span class="data">"Content-Type: application/json"</span> \</div>
+      <div class="cmd-line">&nbsp;&nbsp;<span class="flag">-d</span> <span class="data">'{"email":"demo@taskion.com","password":"secret123"}'</span></div>
+    </div>
+
+    <div class="label">Response — live from Supabase PostgreSQL</div>
+    <div class="response-block">
+      <div class="response-line"><span class="bracket">{</span></div>
+      <div class="response-line">&nbsp;&nbsp;<span class="key">"status"</span>: <span class="status-success">"success"</span>,</div>
+      <div class="response-line">&nbsp;&nbsp;<span class="key">"data"</span>: <span class="bracket">{</span></div>
+      <div class="response-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="key">"id"</span>: <span class="val-num">2</span>,</div>
+      <div class="response-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="key">"email"</span>: <span class="val-str">"demo@taskion.com"</span>,</div>
+      <div class="response-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="key">"created_at"</span>: <span class="val-str">"2026-03-28T14:01:54.898Z"</span></div>
+      <div class="response-line">&nbsp;&nbsp;<span class="bracket">}</span></div>
+      <div class="response-line"><span class="bracket">}</span></div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="result-row">
+      <div class="check">✓</div>
+      <div class="result-text">
+        <div class="result-title">User registered in production database</div>
+        <div class="result-sub">Live on Render · PostgreSQL on Supabase · JWT ready</div>
+      </div>
+      <div class="live-badge">LIVE</div>
+    </div>
+
+    <div class="footer">Taskion API · https://taskion.onrender.com</div>
+
+  </div>
+</div>
+</body>
+</html>
