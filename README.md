@@ -1,25 +1,50 @@
 # Taskion
 
-A secure, production style REST API for managing personal tasks — built with Node.js, Express.js, and PostgreSQL.
+A secure, production-style REST API for managing personal tasks — built with Node.js, Express.js, and PostgreSQL.
 
 ---
 
-## 🚀 Features
+## 🌐 Live Demo
 
-- **Authentication** — Register and login with email and password
-- **JWT Authorization** — Protected routes using JSON Web Tokens
-- **Task Management** — Full CRUD operations on tasks
-- **Validation** — Request validation using Joi schemas on all endpoints
-- **Pagination** — Page through tasks with page and limit controls
-- **Filtering** — Filter tasks by completion status
-- **Sorting** — Sort tasks by id, title, or completed status
-- **Rate Limiting** — Brute force protection on all endpoints
-- **Security Headers** — Helmet.js securing HTTP response headers
-- **Logging** — Structured logging with Winston and Morgan
-- **Swagger Docs** — Interactive API documentation at `/api-docs`
-- **Error Handling** — Centralized error handling with consistent responses
-- **Automated Testing** — 19 tests covering auth and task endpoints using Jest and Supertest
-- **Docker Support** — Fully containerized with Docker and docker-compose
+| | |
+|---|---|
+| **API** | https://taskion.onrender.com |
+| **Swagger Docs** | https://taskion.onrender.com/api-docs |
+| **GitHub** | https://github.com/Vrishali34/taskion |
+
+### API in Action
+
+![Live API](screenshots/taskion-live-register.png)
+
+---
+
+## ⚡ What Taskion Offers
+
+### 🔐 Security First
+| Feature | Details |
+|---|---|
+| Authentication | JWT-based register and login with bcrypt password hashing |
+| Authorization | Protected routes — users can only access their own data |
+| Rate Limiting | 100 req/15min globally · 10 req/15min on auth endpoints |
+| Security Headers | Helmet.js — removes X-Powered-By, prevents XSS, clickjacking, MIME sniffing |
+| Input Validation | Joi schemas on every endpoint — fail fast, reject early |
+
+### 📦 Core Functionality
+| Feature | Details |
+|---|---|
+| Task Management | Full CRUD — create, read, update, delete tasks |
+| Pagination | page and limit query params with metadata in response |
+| Filtering | Filter by completion status — completed=true or false |
+| Sorting | Sort by id, title, or completed · asc or desc order |
+
+### 🛠️ Production Grade
+| Feature | Details |
+|---|---|
+| Structured Logging | Winston + Morgan — timestamped logs, HTTP audit trail, error stack traces |
+| Automated Testing | 19 tests across auth and task endpoints using Jest + Supertest |
+| Docker Support | docker compose up --build — API + PostgreSQL, one command |
+| API Documentation | Swagger UI — interactive docs, test endpoints live from browser |
+| Error Handling | Centralized middleware — consistent error format across all endpoints |
 
 ---
 
@@ -75,6 +100,10 @@ taskion
 ├── tests
 │   ├── auth.test.js          # Auth endpoint tests
 │   └── task.test.js          # Task endpoint tests
+│
+├── screenshots
+│   ├── taskion-live-register.png
+│   └── taskion-jest-results.png
 │
 ├── logs
 │   ├── combined.log          # All logs (gitignored)
@@ -174,13 +203,20 @@ Tests:       19 passed, 19 total
 Test Suites: 2 passed, 2 total
 ```
 
+![Test Results](screenshots/taskion-jest-results.png)
+
 ---
 
 ## 📖 API Documentation
 
-Interactive Swagger documentation available at:
+Interactive Swagger documentation available locally at:
 ```
 http://localhost:5000/api-docs
+```
+
+Or live at:
+```
+https://taskion.onrender.com/api-docs
 ```
 
 ---
@@ -231,6 +267,7 @@ http://localhost:5000/api-docs
 - All routes — 100 requests per 15 minutes per IP
 - Auth routes — 10 requests per 15 minutes per IP
 - Exceeding the limit returns `429 Too Many Requests`
+- Implements sliding window counter algorithm
 
 ### Helmet.js Headers
 - Removes `X-Powered-By` header to hide server technology
@@ -260,9 +297,9 @@ logs/error.log     — errors only
 
 ### Example Log Output
 ```
-2026-03-27 12:42:51 [INFO]: App configured successfully
-2026-03-27 12:42:51 [HTTP]: GET / HTTP/1.1 200
-2026-03-27 12:42:51 [ERROR]: Task not found — PUT /tasks/99999
+2026-03-28 13:49:10 [INFO]: App configured successfully
+2026-03-28 13:49:10 [HTTP]: POST /auth/register HTTP/1.1 201
+2026-03-28 13:49:10 [ERROR]: Task not found — PUT /tasks/99999
 ```
 
 ---
@@ -311,6 +348,7 @@ docker compose down -v
 - [x] Rate Limiting + Security Headers
 - [x] Docker Support
 - [x] Winston Logging
+- [x] Production Deployment
 
 ---
 
