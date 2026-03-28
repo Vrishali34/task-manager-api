@@ -10,11 +10,15 @@ const options = {
       description: 'Taskion — A secure, production-style REST API for managing personal tasks. Built with Node.js, Express, and PostgreSQL.',
     },
     servers: [
-      {
-        url: 'http://localhost:5000',
-        description: 'Local development server'
-      }
-    ],
+  {
+    url: process.env.NODE_ENV === 'production'
+      ? 'https://taskion.onrender.com'
+      : 'http://localhost:5000',
+    description: process.env.NODE_ENV === 'production'
+      ? 'Production server'
+      : 'Local development server'
+  }
+],
     components: {
       securitySchemes: {
         bearerAuth: {
